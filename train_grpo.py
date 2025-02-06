@@ -8,12 +8,12 @@ dataset = load_dataset("trl-lib/tldr", split="train")
 def reward_len(completions, **kwargs):
     return [-abs(20 - len(completion)) for completion in completions]
 
-training_args = GRPOConfig(output_dir="Qwen2-0.5B-GRPO", logging_steps=10)
+training_args = GRPOConfig(output_dir="Qwen2-0.5B-GRPO", logging_steps=10, use_vllm=True, vllm_gpu_memory_utilization=0.3)
 trainer = GRPOTrainer(
     model="Qwen/Qwen2-0.5B-Instruct",
     reward_funcs=reward_len,
     args=training_args,
     train_dataset=dataset,
 )
-trainer.model.to("cuda")
+#trainer.model.to("cuda")
 trainer.train()
