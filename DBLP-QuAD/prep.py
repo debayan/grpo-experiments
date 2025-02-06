@@ -1,4 +1,4 @@
-import sys,os,json
+import sys,os,json,csv
 
 
 trainq = json.load(open('train/questions.json'))['questions']
@@ -24,8 +24,14 @@ for item in trainq:
 
 j = []
 for p,c in zip(prompts,completions):
-    j.append({'prompt':p, 'completions':c})
+    j.append({'prompt':p, 'ground_truth':c})
 f = open('dblpquad_sparql_train_1.json','w')
 f.write(json.dumps(j,indent=4))
 f.close()
 
+#with open("dblpquad_sparql_train_1.csv", "w", newline="") as f:
+#    writer = csv.writer(f)
+#    writer.writerow(["prompts", "completions"])  # Header (optional)
+#    for a, b in zip(prompts, completions):
+#        writer.writerow([a, b])
+#
