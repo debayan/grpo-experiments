@@ -8,22 +8,6 @@ import wandb
 dataset = load_dataset("json", data_files="DBLP-QuAD/dblpquad_sparql_train_1.json")["train"]
 print(dataset[0])
 
-from rdflib.plugins.sparql.parser import parseQuery
-from rdflib.plugins.sparql.sparql import Query
-
-def is_valid_sparql(query):
-    """Check if a SPARQL query is syntactically valid using rdflib."""
-    try:
-        parsed_query = parseQuery(query)
-        if isinstance(parsed_query, Query):
-            print("valid sparql:",query)
-            return 1
-        else:
-            return -1
-    except Exception as e:
-        print(f"Invalid SPARQL query: {e}")
-    return -1
-
 def reward_func(completions, ground_truth, **kwargs):
     rewards = []
     for c, g in zip(completions, ground_truth):
@@ -31,8 +15,7 @@ def reward_func(completions, ground_truth, **kwargs):
         g = g.replace(' ', '').lower()
         similarity_reward = SequenceMatcher(None, extracted_c, g).ratio()
         length_reward = -abs(float(len(c)-len(g))/len(g))
-        valid_sparql_reward = is_valid_sparql(c) 
-        rewards.append(similarity_reward+length_reward+valid_sparql_reward)
+        rewards.append(similarity_reward+length_reward)
     print("rewards:",rewards)
     for c, g in zip(completions[:1], ground_truth[:1]):
         print("Printing 1 samples")
