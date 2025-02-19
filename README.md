@@ -5,6 +5,9 @@ How to run?
 git clone this repository.
 
 python3 -m venv .
-source bin/activaye
+
+source bin/activate
+
 pip install -r requirements.txt
+
 python3 -u train_sparql_grpo.py
